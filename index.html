@@ -1,115 +1,2062 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>HLM · حلم · for Salam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&family=Petit+Formal+Script&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #f4e7d3;
+    --ivory-deep: #ead9bd;
+    --paper: #f8efde;
+    --rose: #c88597;
+    --rose-deep: #a35468;
+    --rose-shadow: #6f2a3a;
+    --ink: #3a1820;
+    --sepia: #5a2a2e;
+    --gold: #b48a4a;
+    --moss: #6f7a3f;
+    --moss-deep: #4b5328;
+    --water: #6a8ea0;
+    --water-deep: #2f4a5a;
+    --lotus: #efb9c4;
+    --display: 'Cormorant Garamond', serif;
+    --body: 'EB Garamond', serif;
+    --script: 'Pinyon Script', cursive;
+    --hand: 'Petit Formal Script', cursive;
+    --arabic: 'Amiri', serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--ivory);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.45), transparent 55%),
+      radial-gradient(ellipse at 85% 90%, rgba(111,42,58,.10), transparent 60%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.18  0 0 0 0 0.22  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-attachment: fixed;
+  }
+  ::selection { background: var(--rose); color: var(--paper); }
 
-    :root {
-      --ink: #0d0d0d;
-      --paper: #f5f0e8;
-      --accent: #c8402a;
-      --muted: #7a7060;
-      --line: #d4cebf;
-    }
+  .deckle {
+    background: var(--paper);
+    box-shadow: 0 30px 60px -30px rgba(58,24,32,.4), 0 2px 0 rgba(58,24,32,.06);
+    border: 1px solid rgba(58,24,32,.08);
+  }
+  .smallcaps { font-variant: all-small-caps; letter-spacing: .22em; }
+  .dropcap::first-letter {
+    font-family: var(--script);
+    font-size: 5.5em;
+    line-height: .8;
+    float: left;
+    padding: .12em .12em 0 0;
+    color: var(--rose-deep);
+  }
+  .arabic { font-family: var(--arabic); direction: rtl; }
 
-    body {
-      background: var(--paper);
-      color: var(--ink);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
+  /* ============ LOCKED SCREEN ============ */
+  .locked-stage {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 40px 20px;
+    position: relative;
+  }
+  .locked-stage::before {
+    content: '';
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, transparent 200px, rgba(58,24,32,.18) 100%);
+  }
+  .locked-wrap { text-align: center; position: relative; z-index: 1; }
+  .hlm-mark {
+    font-family: var(--arabic);
+    font-size: 28px;
+    color: var(--rose-deep);
+    margin-bottom: 6px;
+    opacity: 0;
+  }
+  .hlm-sub {
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--sepia);
+    font-size: 14px;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+  }
+  .heart-key-set {
+    position: relative;
+    width: min(420px, 80vw);
+    margin: 0 auto;
+    opacity: 0;
+  }
+  .heart-svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 30px 30px rgba(111,42,58,.35)); }
+  .heart-svg .heart-left, .heart-svg .heart-right { transition: transform 1.4s cubic-bezier(.6,.05,.2,1); transform-origin: 50% 60%; }
+  .heart-svg.opening .heart-left { transform: rotate(-55deg) translate(-30px,-10px); }
+  .heart-svg.opening .heart-right { transform: rotate(55deg) translate(30px,-10px); }
+  .heart-svg.opening .keyhole-g { opacity: 0; transition: opacity .6s; }
 
-    /* Decorative horizontal rules */
-    body::before, body::after {
-      content: '';
-      position: fixed;
-      left: 0; right: 0;
-      height: 3px;
-      background: repeating-linear-gradient(90deg, var(--accent) 0, var(--accent) 6px, transparent 6px, transparent 10px);
-    }
-    body::before { top: 20px; }
-    body::after  { bottom: 20px; }
+  .key-row {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+  }
+  .key-bow {
+    width: 96px; height: 96px;
+    border: 3px solid var(--gold);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #e7c989, #b48a4a 60%, #7a5a2a);
+    display: grid; place-items: center;
+    box-shadow: inset 0 -8px 16px rgba(0,0,0,.3), 0 6px 12px rgba(58,24,32,.35);
+    position: relative;
+    flex: 0 0 auto;
+  }
+  .key-bow::before {
+    content: '';
+    position: absolute; inset: 12px;
+    border: 2px dashed rgba(58,24,32,.35);
+    border-radius: 50%;
+  }
+  .key-bow .ar {
+    font-family: var(--arabic);
+    color: var(--ink);
+    font-size: 26px;
+    font-weight: 700;
+    text-shadow: 0 1px 0 rgba(255,255,255,.35);
+  }
+  .key-shaft {
+    width: 180px; height: 22px;
+    background: linear-gradient(180deg, #d8b070, #b48a4a 50%, #8a6230);
+    position: relative;
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,.35);
+  }
+  .key-shaft::after {
+    content: '';
+    position: absolute;
+    right: 0; bottom: -14px;
+    width: 8px; height: 28px;
+    background: linear-gradient(180deg, #b48a4a, #8a6230);
+  }
+  .key-shaft::before {
+    content: '';
+    position: absolute;
+    right: 16px; bottom: -10px;
+    width: 8px; height: 22px;
+    background: linear-gradient(180deg, #b48a4a, #8a6230);
+  }
+  .key-input-wrap {
+    position: absolute;
+    left: 96px; top: -36px;
+    width: 180px;
+    text-align: center;
+  }
+  .key-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--sepia);
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--rose-shadow);
+    letter-spacing: .4em;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 6px 0;
+    outline: none;
+  }
+  .key-input::placeholder { color: rgba(90,42,46,.45); font-style: italic; letter-spacing: .3em; }
+  .key-hint {
+    margin-top: 18px;
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--sepia);
+    letter-spacing: .14em;
+  }
+  .key-hint .wrong { color: var(--rose-shadow); }
+  .key-hint .riddle {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--rose-shadow);
+    letter-spacing: .03em;
+    margin-bottom: 6px;
+  }
+  .key-hint .riddle-ar {
+    font-family: var(--arabic);
+    font-style: normal;
+    font-size: 15px;
+    color: var(--sepia);
+    letter-spacing: 0;
+  }
 
-    .frame {
-      position: fixed;
-      top: 10px; left: 10px; right: 10px; bottom: 10px;
-      border: 1px solid var(--line);
-      pointer-events: none;
-    }
+  .corner-orn {
+    position: fixed;
+    width: 120px; height: 120px;
+    opacity: .55;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .corner-orn.tl { top: 18px; left: 18px; }
+  .corner-orn.tr { top: 18px; right: 18px; transform: scaleX(-1); }
+  .corner-orn.bl { bottom: 18px; left: 18px; transform: scaleY(-1); }
+  .corner-orn.br { bottom: 18px; right: 18px; transform: scale(-1,-1); }
 
-    .container {
-      text-align: center;
-      padding: 3rem 2rem;
-      max-width: 640px;
-    }
+  /* ============ ENVELOPE ============ */
+  .envelope-stage {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 80px 20px;
+    perspective: 1400px;
+  }
+  .envelope {
+    position: relative;
+    width: min(540px, 88vw);
+    aspect-ratio: 1.55 / 1;
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+  .env-face {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, #e7c89a, #c89a6a);
+    box-shadow:
+      inset 0 0 60px rgba(58,24,32,.25),
+      0 30px 50px -20px rgba(58,24,32,.5);
+  }
+  .env-face::before, .env-face::after {
+    content: '';
+    position: absolute;
+    background: linear-gradient(160deg, #d8b079, #a17a4a);
+    box-shadow: inset 0 0 30px rgba(58,24,32,.25);
+  }
+  .env-face::before {
+    inset: 0 50% 0 0;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+  .env-face::after {
+    inset: 0 0 0 50%;
+    clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  }
+  .env-flap {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(160deg, #e7c89a, #c89a6a);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top;
+    transform: rotateX(0deg);
+    transition: transform 1.5s cubic-bezier(.6,.05,.2,1);
+    box-shadow: inset 0 0 30px rgba(58,24,32,.25);
+    z-index: 3;
+  }
+  .envelope.open .env-flap { transform: rotateX(180deg); }
+  .seal {
+    position: absolute;
+    top: 38%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #c14a5a, #7f1d2f 70%, #5a1422);
+    display: grid; place-items: center;
+    color: #f4d8c2;
+    font-family: var(--arabic);
+    font-size: 38px;
+    font-weight: 700;
+    box-shadow:
+      0 6px 14px rgba(58,24,32,.5),
+      inset 0 -6px 12px rgba(0,0,0,.4),
+      inset 0 6px 12px rgba(255,180,180,.25);
+    z-index: 4;
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .seal::before {
+    content: '';
+    position: absolute; inset: 6px;
+    border-radius: 50%;
+    border: 2px dashed rgba(244,216,194,.5);
+  }
+  .envelope.open .seal { opacity: 0; transform: translate(-50%,-50%) scale(.6) rotate(20deg); }
+  .env-hint {
+    text-align: center;
+    margin-top: 24px;
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--sepia);
+    letter-spacing: .12em;
+  }
 
-    .eyebrow {
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.2s forwards;
-    }
+  /* ============ LETTER PAGE ============ */
+  .letter-stage {
+    padding: 80px 20px 120px;
+    display: flex;
+    justify-content: center;
+  }
+  .letter {
+    width: min(720px, 100%);
+    background: var(--paper);
+    padding: 64px 56px;
+    position: relative;
+    box-shadow:
+      0 50px 80px -40px rgba(58,24,32,.5),
+      0 2px 0 rgba(58,24,32,.06);
+    border: 1px solid rgba(58,24,32,.08);
+  }
+  .letter::before, .letter::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 14px;
+    background:
+      repeating-linear-gradient(45deg, transparent 0 8px, rgba(58,24,32,.08) 8px 9px),
+      var(--paper);
+  }
+  .letter::before {
+    top: 0;
+    clip-path: polygon(0 0,4% 100%,8% 0,12% 100%,16% 0,20% 100%,24% 0,28% 100%,32% 0,36% 100%,40% 0,44% 100%,48% 0,52% 100%,56% 0,60% 100%,64% 0,68% 100%,72% 0,76% 100%,80% 0,84% 100%,88% 0,92% 100%,96% 0,100% 100%,100% 0);
+  }
+  .letter::after {
+    bottom: 0;
+    clip-path: polygon(0 100%,4% 0,8% 100%,12% 0,16% 100%,20% 0,24% 100%,28% 0,32% 100%,36% 0,40% 100%,44% 0,48% 100%,52% 0,56% 100%,60% 0,64% 100%,68% 0,72% 100%,76% 0,80% 100%,84% 0,88% 100%,92% 0,96% 100%,100% 0,100% 100%);
+  }
 
-    h1 {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(4rem, 12vw, 8rem);
-      font-weight: 700;
-      line-height: 0.9;
-      letter-spacing: -0.02em;
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease 0.4s forwards;
-    }
+  .arabic-letter {
+    direction: rtl;
+    text-align: right;
+    font-family: var(--arabic);
+  }
+  .arabic-letter .en-mark {
+    color: var(--rose-deep);
+    font-size: 12px;
+    margin-bottom: 4px;
+    direction: ltr;
+    text-align: left;
+    font-family: var(--display);
+  }
+  .arabic-letter .ar-greeting {
+    font-family: var(--arabic);
+    font-weight: 700;
+    color: var(--rose-shadow);
+    font-size: clamp(48px, 7vw, 72px);
+    line-height: 1.15;
+    margin: 0 0 8px;
+  }
+  .arabic-letter .salutation {
+    font-family: var(--arabic);
+    font-style: italic;
+    color: var(--sepia);
+    font-size: 17px;
+    margin-bottom: 26px;
+  }
+  .arabic-letter p {
+    font-family: var(--arabic);
+    font-size: 22px;
+    line-height: 1.85;
+    color: var(--ink);
+    margin: 0 0 22px;
+  }
+  .arabic-letter p em {
+    color: var(--rose-shadow);
+    font-style: normal;
+    font-weight: 700;
+  }
+  .arabic-letter .en {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 19px;
+    color: var(--rose-deep);
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+    margin: 0 .2em;
+  }
+  .arabic-letter .ar-sign-off {
+    font-family: var(--script);
+    font-size: 38px;
+    color: var(--rose-deep);
+    margin-top: 28px;
+    line-height: 1;
+    direction: rtl;
+  }
+  .arabic-letter .ar-question {
+    position: relative;
+    margin: 36px 0 30px;
+    padding: 30px 30px 28px;
+    background: linear-gradient(180deg, rgba(200,133,151,.10), rgba(200,133,151,.04));
+    border-top: 1px solid rgba(111,42,58,.22);
+    border-bottom: 1px solid rgba(111,42,58,.22);
+  }
+  .arabic-letter .ar-question::before,
+  .arabic-letter .ar-question::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px; height: 1px;
+    background: var(--rose-deep);
+    opacity: .5;
+  }
+  .arabic-letter .ar-question::before { top: -1px; box-shadow: 0 6px 0 -1px var(--paper), 0 7px 0 rgba(111,42,58,.22); }
+  .arabic-letter .ar-question::after  { bottom: -1px; }
+  .arabic-letter .ar-question p { margin: 0 0 14px; }
+  .arabic-letter .ar-question-mark {
+    position: absolute;
+    top: -30px; right: 18px;
+    font-family: var(--script);
+    font-size: 120px;
+    color: var(--rose);
+    line-height: 1;
+    opacity: .35;
+    pointer-events: none;
+  }
+  .arabic-letter .ar-question-line {
+    font-family: var(--arabic);
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--rose-shadow);
+    line-height: 1.4;
+    margin: 6px 0 8px !important;
+  }
+  .arabic-letter .ar-question-sub {
+    font-family: var(--arabic);
+    font-size: 20px;
+    color: var(--sepia);
+    margin: 0 !important;
+  }
 
-    h1 span.accent { color: var(--accent); }
+  /* ============ VIGNETTES ============ */
+  section.vignette {
+    position: relative;
+    padding: 120px 24px;
+    overflow: hidden;
+  }
+  .vignette .inner {
+    max-width: 920px; margin: 0 auto;
+    position: relative; z-index: 2;
+  }
+  .vignette h3 {
+    font-family: var(--script);
+    font-weight: 400;
+    font-size: clamp(56px, 9vw, 96px);
+    line-height: .95;
+    margin: 0 0 20px;
+  }
+  .vignette .eyebrow {
+    font-family: var(--display);
+    font-style: italic;
+    letter-spacing: .35em;
+    font-size: 13px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
 
-    .divider {
-      width: 60px;
-      height: 2px;
-      background: var(--accent);
-      margin: 0 auto 2rem;
-      opacity: 0;
-      animation: scaleIn 0.6s ease 0.8s forwards;
-    }
+  /* hearts vignette */
+  .v-hearts {
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(200,133,151,.45), transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(239,185,196,.45), transparent 60%),
+      var(--ivory);
+  }
+  .v-hearts h3 { color: var(--rose-shadow); }
+  .v-hearts .eyebrow { color: var(--rose-deep); }
+  .floating-heart {
+    position: absolute;
+    color: var(--rose);
+    opacity: .55;
+    animation: float 11s ease-in-out infinite;
+    z-index: 1;
+    will-change: transform;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+    50% { transform: translateY(-30px) rotate(calc(var(--r, 0deg) + 8deg)); }
+  }
 
-    .tagline {
-      font-size: 1rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 1s forwards;
-    }
+  /* acrostic — سلام */
+  .acrostic-title {
+    margin: 0 0 18px;
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-weight: 400;
+  }
+  .acrostic-title-ar {
+    font-family: var(--arabic);
+    font-weight: 700;
+    font-size: clamp(80px, 14vw, 160px);
+    color: var(--rose-shadow);
+    line-height: .9;
+    letter-spacing: -.02em;
+    text-shadow: 0 2px 0 rgba(255,255,255,.4);
+  }
+  .acrostic-title-en {
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--rose-deep);
+    font-size: clamp(18px, 2.2vw, 26px);
+    direction: ltr;
+  }
+  .acrostic-lede {
+    max-width: 720px;
+    font-family: var(--arabic);
+    font-size: 21px;
+    color: var(--sepia);
+    line-height: 1.7;
+    margin: 0 0 40px;
+  }
+  .acrostic-lede .en {
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--rose-deep);
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+  }
+  .acrostic-list { display: flex; flex-direction: column; gap: 22px; }
+  .acrostic-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 26px;
+    align-items: stretch;
+    background: rgba(255,247,235,.7);
+    border: 1px solid rgba(111,42,58,.18);
+    padding: 26px 28px;
+    box-shadow: 0 16px 30px -20px rgba(111,42,58,.35);
+    opacity: 0;
+    transform: translateX(24px);
+    will-change: transform, opacity;
+  }
+  @media (max-width: 640px) {
+    .acrostic-row { grid-template-columns: 100px 1fr; padding: 22px; gap: 18px; }
+  }
+  .acrostic-letter {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1 / 1;
+    color: var(--rose-shadow);
+  }
+  .acrostic-letter-glyph {
+    font-family: var(--arabic);
+    font-weight: 700;
+    font-size: 96px;
+    line-height: 1;
+    color: var(--rose-shadow);
+    text-shadow: 0 2px 0 rgba(255,255,255,.5);
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 640px) { .acrostic-letter-glyph { font-size: 70px; } }
+  .acrostic-letter-ring {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    animation: ring-spin 40s linear infinite;
+    will-change: transform;
+  }
+  @keyframes ring-spin { to { transform: rotate(360deg); } }
+  .acrostic-letter::after {
+    content: '';
+    position: absolute;
+    inset: 14%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(239,185,196,.7), rgba(200,133,151,.15) 60%, transparent 80%);
+    z-index: 0;
+  }
+  .acrostic-body {
+    direction: rtl;
+    text-align: right;
+    padding-top: 6px;
+  }
+  .acrostic-trait {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .acrostic-trait-ar {
+    font-family: var(--arabic);
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--rose-deep);
+  }
+  .acrostic-text {
+    margin: 0;
+    font-family: var(--arabic);
+    font-size: 20px;
+    line-height: 1.85;
+    color: var(--ink);
+  }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes scaleIn {
-      from { opacity: 0; transform: scaleX(0); }
-      to   { opacity: 1; transform: scaleX(1); }
-    }
-  </style>
+  /* ============ VIGNETTE 2 — GARDEN ============ */
+  .v-garden {
+    background:
+      radial-gradient(ellipse at 25% 8%,  rgba(200,133,151,.5),  transparent 50%),
+      radial-gradient(ellipse at 80% 88%, rgba(239,185,196,.4),  transparent 50%),
+      radial-gradient(ellipse at 55% 50%, rgba(244,216,194,.18), transparent 45%),
+      var(--ivory);
+    color: var(--ink);
+  }
+  .v-garden h3    { color: var(--rose-shadow); }
+  .v-garden .eyebrow { color: var(--rose-deep); }
+
+  /* floating petals — drift lazily like the hearts */
+  .floating-petal {
+    position: absolute;
+    opacity: .4;
+    animation: petal-drift var(--pdur, 13s) ease-in-out infinite;
+    animation-delay: var(--pdel, 0s);
+    z-index: 1;
+    pointer-events: none;
+    will-change: transform;
+  }
+  @keyframes petal-drift {
+    0%,100% { transform: translateY(0)    translateX(0)    rotate(var(--pr, 0deg)); opacity: .3; }
+    30%     { transform: translateY(-22px) translateX(10px) rotate(calc(var(--pr,0deg)+18deg)); opacity: .5; }
+    65%     { transform: translateY(-10px) translateX(-8px) rotate(calc(var(--pr,0deg)+6deg));  opacity: .42; }
+  }
+
+  /* garden text */
+  .garden-lede {
+    font-family: var(--arabic);
+    font-size: 21px;
+    color: var(--sepia);
+    line-height: 1.85;
+    max-width: 640px;
+    direction: rtl;
+    text-align: right;
+    margin: 0 0 40px;
+  }
+  .garden-lede .en {
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--rose-deep);
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+  }
+
+  /* ornamental divider */
+  .garden-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 44px;
+  }
+  .garden-divider .gd-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold) 60%);
+  }
+  .garden-divider .gd-line.rev {
+    background: linear-gradient(270deg, transparent, var(--gold) 60%);
+  }
+  .garden-divider .gd-diamond {
+    width: 7px; height: 7px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+  .garden-divider .gd-diamond.sm {
+    width: 4px; height: 4px;
+    opacity: .6;
+  }
+
+  /* trio grid */
+  .garden-trio {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (max-width: 760px) {
+    .garden-trio { grid-template-columns: 1fr; gap: 32px; }
+    .garden-trio > * { max-width: 340px; margin: 0 auto; }
+  }
+
+  /* flower portrait cards */
+  .flower-portrait {
+    background: var(--paper);
+    border: 1px solid rgba(111,42,58,.14);
+    box-shadow: 0 2px 0 rgba(111,42,58,.05), 0 28px 50px -26px rgba(111,42,58,.3);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 28px 20px 26px;
+  }
+  .flower-portrait::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--rose-deep), var(--gold), var(--rose-deep));
+  }
+  .flower-portrait::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 20%, var(--rose) 50%, transparent 80%);
+    opacity: .4;
+  }
+  .fp-art {
+    height: 168px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .fp-art::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 50%;
+    transform: translateX(-50%);
+    width: 36px; height: 1px;
+    background: var(--gold);
+    opacity: .55;
+  }
+  .flower-svg { width: 120px; height: 160px; filter: drop-shadow(0 6px 8px rgba(58,24,32,.15)); }
+  .fp-name {
+    font-family: var(--arabic);
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--rose-shadow);
+    line-height: 1;
+  }
+  .fp-latin {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 11px;
+    letter-spacing: .2em;
+    color: var(--sepia);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .fp-trait-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 10px;
+  }
+  .fp-trait-ar {
+    font-family: var(--arabic);
+    color: var(--rose-deep);
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .fp-trait-dot { color: var(--gold); font-size: 8px; line-height: 1; }
+  .fp-trait-en {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 12px;
+    letter-spacing: .1em;
+    color: var(--sepia);
+  }
+  .fp-line {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--sepia);
+    margin: 0;
+    padding: 12px 4px 0;
+    border-top: 1px solid rgba(111,42,58,.1);
+  }
+
+  /* goat portrait — ornate frame */
+  .goat-portrait { text-align: center; }
+  .goat-frame-wrap { position: relative; max-width: 280px; margin: 0 auto; }
+  .goat-frame-top, .goat-frame-bot { display: block; width: 100%; }
+  .goat-frame-inner {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background:
+      radial-gradient(ellipse at 50% 25%, rgba(255,250,244,.97), rgba(244,231,211,.55) 65%),
+      var(--paper);
+    border-left:  2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+    overflow: hidden;
+  }
+  .goat-svg {
+    position: absolute;
+    width: 84%; height: auto;
+    left: 8%; bottom: 14%;
+    animation: bob 5s ease-in-out infinite;
+    will-change: transform;
+  }
+  @keyframes bob {
+    0%,100% { transform: translateY(0) rotate(-1deg); }
+    50%      { transform: translateY(-7px) rotate(1.2deg); }
+  }
+  .goat-petal-floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 14%;
+    background: linear-gradient(180deg, transparent, rgba(239,185,196,.35));
+  }
+  .goat-petal-scatter {
+    position: absolute;
+    bottom: 0;
+    opacity: .75;
+  }
+  .goat-label {
+    margin-top: 10px;
+    font-family: var(--arabic);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--rose-shadow);
+    direction: rtl;
+    line-height: 1;
+  }
+  .goat-label-sub {
+    font-family: var(--hand);
+    font-size: 17px;
+    color: var(--sepia);
+    margin-top: 4px;
+    letter-spacing: .03em;
+  }
+
+  /* garden outro */
+  .garden-outro {
+    margin-top: 58px;
+    padding: 26px 28px;
+    border-top:    1px solid rgba(111,42,58,.18);
+    border-bottom: 1px solid rgba(111,42,58,.18);
+    direction: rtl;
+    text-align: right;
+    font-family: var(--arabic);
+    font-size: 21px;
+    line-height: 1.85;
+    color: var(--sepia);
+    max-width: 680px;
+  }
+  .garden-outro .en {
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--rose-deep);
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+  }
+
+  /* water/lotus vignette */
+  .v-water {
+    background:
+      radial-gradient(ellipse at 30% 90%, rgba(47,74,90,.55), transparent 70%),
+      linear-gradient(180deg, #cfe1e5 0%, #9bb9c4 40%, #6a8ea0 80%, #2f4a5a 100%);
+    color: #f4e7d3;
+  }
+  .v-water h3 { color: #fce6ea; }
+  .v-water .eyebrow { color: #fce6ea; opacity: .9; }
+  .v-water p.body { color: #f7eedd; font-size: 19px; max-width: 560px; }
+  .v-water .lotus-title {
+    margin: 0 0 18px;
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-weight: 400;
+    direction: rtl;
+  }
+  .v-water .lotus-title-ar {
+    font-family: var(--arabic);
+    font-weight: 700;
+    font-size: clamp(72px, 11vw, 130px);
+    color: #fff8de;
+    line-height: .95;
+    text-shadow: 0 4px 24px rgba(15,30,40,.5);
+  }
+  .v-water .lotus-title-en {
+    font-family: var(--display);
+    font-style: italic;
+    color: #f4e7d3;
+    font-size: clamp(18px, 2.2vw, 26px);
+    direction: ltr;
+    opacity: .85;
+  }
+  .v-water .lotus-question {
+    font-family: var(--arabic);
+    font-weight: 700;
+    font-size: clamp(24px, 3.2vw, 34px);
+    color: #fce6ea;
+    margin: 4px 0 26px;
+    max-width: 760px;
+    direction: rtl;
+    text-shadow: 0 2px 18px rgba(15,30,40,.45);
+  }
+  .v-water .lotus-question::before {
+    content: '〜';
+    display: inline-block;
+    margin-left: 14px;
+    color: rgba(252,230,234,.55);
+    font-family: var(--display);
+  }
+  .v-water .lotus-body {
+    font-family: var(--arabic);
+    font-size: 22px;
+    line-height: 1.95;
+    color: #f9efd9;
+    max-width: 760px;
+    direction: rtl;
+    text-align: right;
+    border-right: 2px solid rgba(252,230,234,.45);
+    padding-right: 20px;
+    margin: 0 0 24px;
+  }
+  .ripple {
+    position: absolute;
+    border: 1.5px solid rgba(244,231,211,.35);
+    border-radius: 50%;
+    animation: ripple 7s ease-out infinite;
+    will-change: transform, opacity;
+  }
+  @keyframes ripple {
+    0% { transform: scale(.3); opacity: 0; }
+    20% { opacity: .9; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+  .fish-school { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .fish {
+    position: absolute;
+    font-size: 28px;
+    animation: swim linear infinite;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,.25));
+    will-change: transform;
+  }
+  @keyframes swim {
+    0% { transform: translateX(-12vw) translateY(0); }
+    50% { transform: translateX(50vw) translateY(-12px); }
+    100% { transform: translateX(115vw) translateY(0); }
+  }
+  .lotus-row {
+    margin-top: 50px;
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  .lotus-card {
+    flex: 1 1 240px;
+    background: rgba(244,231,211,.85);
+    color: var(--ink);
+    padding: 24px;
+    box-shadow: 0 18px 30px -15px rgba(15,30,40,.6);
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    will-change: transform, opacity;
+  }
+  .lotus-card .lotus-svg { width: 64px; height: 64px; margin-bottom: 8px; }
+  .lotus-card p { margin: 0; font-family: var(--display); font-style: italic; font-size: 19px; color: var(--sepia); }
+
+  /* ============ VOICE NOTE ============ */
+  .voice-stage { padding: 100px 24px; display: flex; justify-content: center; }
+  .voice-card {
+    width: min(620px, 100%);
+    background: var(--paper);
+    border: 1px solid rgba(58,24,32,.08);
+    padding: 36px 36px 30px;
+    box-shadow: 0 50px 80px -40px rgba(58,24,32,.45);
+    position: relative;
+  }
+  .voice-card .eyebrow { color: var(--rose-deep); }
+  .voice-card h4 {
+    font-family: var(--script);
+    color: var(--rose-shadow);
+    font-weight: 400;
+    margin: 4px 0 20px;
+    font-size: 44px;
+    line-height: 1;
+  }
+  .player {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 20px;
+    border: 1px solid rgba(58,24,32,.12);
+    background:
+      repeating-linear-gradient(0deg, transparent 0 14px, rgba(58,24,32,.05) 14px 15px),
+      var(--ivory);
+  }
+  .play-btn {
+    width: 54px; height: 54px; border-radius: 50%;
+    border: none;
+    background: radial-gradient(circle at 30% 30%, #c14a5a, #7f1d2f);
+    color: var(--paper);
+    cursor: pointer;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 12px rgba(58,24,32,.4);
+    transition: transform .15s, box-shadow .15s;
+    flex-shrink: 0;
+  }
+  .play-btn:hover { transform: scale(1.08); box-shadow: 0 8px 18px rgba(58,24,32,.5); }
+  .play-btn:active { transform: scale(.96); }
+  .waveform { flex: 1; display: flex; align-items: center; gap: 3px; height: 36px; }
+  .waveform .bar {
+    flex: 1;
+    background: var(--rose-deep);
+    border-radius: 2px;
+    height: 30%;
+    transition: height .25s ease;
+  }
+  .waveform.playing .bar { animation: wave 1.1s ease-in-out infinite; }
+  @keyframes wave { 0%,100% { height: 25%; } 50% { height: 90%; } }
+  .time { font-family: var(--display); font-style: italic; color: var(--sepia); font-size: 14px; letter-spacing: .1em; }
+  .upload-hint {
+    margin-top: 10px;
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--sepia);
+    font-size: 13px;
+    letter-spacing: .1em;
+  }
+  .upload-hint label { color: var(--rose-deep); text-decoration: underline dotted; cursor: pointer; }
+
+  /* ============ FINAL QUOTE + SIG ============ */
+  .quote-stage { padding: 140px 24px 60px; text-align: center; }
+  .quote-stage blockquote {
+    margin: 0 auto;
+    max-width: 720px;
+    font-family: var(--arabic);
+    font-style: normal;
+    font-size: clamp(24px, 3.4vw, 34px);
+    line-height: 1.6;
+    color: var(--sepia);
+    position: relative;
+    direction: rtl;
+    text-align: right;
+    padding: 0 30px;
+  }
+  .quote-stage blockquote::before {
+    content: '"';
+    font-family: var(--script);
+    font-size: 160px;
+    color: var(--rose);
+    position: absolute;
+    right: -30px; top: -60px;
+    opacity: .55;
+    line-height: 1;
+  }
+  .quote-stage cite {
+    display: block;
+    margin-top: 28px;
+    font-style: normal;
+    font-family: var(--display);
+    letter-spacing: .25em;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--rose-deep);
+    direction: ltr;
+    text-align: center;
+  }
+  .sig-stage { padding: 40px 24px 140px; text-align: center; }
+  .sig-stage .yours {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--sepia);
+    margin-bottom: 12px;
+  }
+  .signature-svg { width: min(420px, 80vw); height: 110px; display: block; margin: 0 auto; }
+  .signature-svg path {
+    fill: none;
+    stroke: var(--rose-shadow);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    will-change: stroke-dashoffset;
+  }
+  .sig-stage .post {
+    margin-top: 30px;
+    font-family: var(--arabic);
+    font-size: 22px;
+    color: var(--rose-deep);
+    opacity: 0;
+  }
+  .sig-stage .with-love {
+    margin-top: 8px;
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--sepia);
+    letter-spacing: .25em;
+    font-size: 12px;
+    text-transform: uppercase;
+    opacity: 0;
+  }
+  .sig-stage .printed-name {
+    margin-top: 18px;
+    font-family: var(--hand);
+    color: var(--rose-shadow);
+    font-size: 56px;
+    letter-spacing: .04em;
+    line-height: 1;
+    opacity: 0;
+  }
+
+  /* ============ REVEAL BASE (GSAP-driven) ============ */
+  .gs-reveal { opacity: 0; transform: translateY(22px); will-change: transform, opacity; }
+
+  /* responsive */
+  @media (max-width: 640px) {
+    .letter { padding: 44px 24px; }
+    .heart-key-set { width: 90vw; }
+    .key-bow { width: 78px; height: 78px; }
+    .key-shaft { width: 140px; height: 18px; }
+    .key-input-wrap { left: 78px; width: 140px; top: -32px; }
+    .key-input { font-size: 18px; }
+    .sig-stage .printed-name { font-size: 40px; }
+    .arabic-letter p { font-size: 19px; }
+  }
+</style>
 </head>
 <body>
-  <div class="frame"></div>
-  <div class="container">
-    <p class="eyebrow">My GitHub Page</p>
-    <h1>Hello,<br><span class="accent">World.</span></h1>
-    <div class="divider"></div>
-    <p class="tagline">Built with GitHub Pages &mdash; deployed in minutes.</p>
-  </div>
+
+<!-- corner ornaments -->
+<svg class="corner-orn tl" viewBox="0 0 120 120" aria-hidden="true">
+  <g fill="none" stroke="#6f2a3a" stroke-width="1.2">
+    <path d="M10 10 C 40 12, 60 30, 62 60"/>
+    <path d="M10 10 C 20 40, 38 58, 60 62"/>
+    <circle cx="62" cy="62" r="4"/>
+    <path d="M30 14 q5 6 0 12 q-5 -6 0 -12 z" fill="#6f2a3a"/>
+    <path d="M14 30 q5 6 0 12 q-5 -6 0 -12 z" fill="#6f2a3a"/>
+    <path d="M48 20 q4 5 0 10 q-4 -5 0 -10 z" fill="#c88597"/>
+    <path d="M20 48 q4 5 0 10 q-4 -5 0 -10 z" fill="#c88597"/>
+  </g>
+</svg>
+<svg class="corner-orn tr" viewBox="0 0 120 120" aria-hidden="true">
+  <g fill="none" stroke="#6f2a3a" stroke-width="1.2">
+    <path d="M10 10 C 40 12, 60 30, 62 60"/>
+    <path d="M10 10 C 20 40, 38 58, 60 62"/>
+    <circle cx="62" cy="62" r="4"/>
+    <path d="M30 14 q5 6 0 12 q-5 -6 0 -12 z" fill="#6f2a3a"/>
+    <path d="M14 30 q5 6 0 12 q-5 -6 0 -12 z" fill="#6f2a3a"/>
+  </g>
+</svg>
+<svg class="corner-orn bl" viewBox="0 0 120 120" aria-hidden="true">
+  <g fill="none" stroke="#6f2a3a" stroke-width="1.2">
+    <path d="M10 10 C 40 12, 60 30, 62 60"/>
+    <path d="M10 10 C 20 40, 38 58, 60 62"/>
+    <circle cx="62" cy="62" r="4"/>
+  </g>
+</svg>
+<svg class="corner-orn br" viewBox="0 0 120 120" aria-hidden="true">
+  <g fill="none" stroke="#6f2a3a" stroke-width="1.2">
+    <path d="M10 10 C 40 12, 60 30, 62 60"/>
+    <path d="M10 10 C 20 40, 38 58, 60 62"/>
+    <circle cx="62" cy="62" r="4"/>
+  </g>
+</svg>
+
+<div id="root"></div>
+
+<!-- Libraries -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" crossorigin></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+gsap.registerPlugin(ScrollTrigger);
+
+/* ============ HEART LOCK ============ */
+function HeartLock({ onUnlock }) {
+  const [val, setVal] = useState('');
+  const [hint, setHint] = useState('idle');
+  const inputRef = useRef(null);
+  const heartRef = useRef(null);
+  const wrapRef  = useRef(null);
+  const markRef  = useRef(null);
+  const subRef   = useRef(null);
+  const keySetRef = useRef(null);
+
+  // entrance animation
+  useEffect(() => {
+    inputRef.current?.focus();
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.to(markRef.current,   { opacity: 1, y: 0, duration: .9 }, .2)
+      .to(subRef.current,    { opacity: 1, y: 0, duration: .9 }, .4)
+      .to(keySetRef.current, { opacity: 1, y: 0, duration: 1 }, .55);
+  }, []);
+
+  const submit = (e) => {
+    e?.preventDefault();
+    if (val.trim().toUpperCase() === 'SALAM') {
+      setHint('opening');
+      // Heart halves open with GSAP
+      const heart = heartRef.current;
+      heart.classList.add('opening');
+      // bloom glow
+      gsap.to(heart, { filter: 'drop-shadow(0 0 40px rgba(200,133,151,.9)) drop-shadow(0 30px 30px rgba(111,42,58,.35))', duration: .8 });
+      gsap.delayedCall(1.5, onUnlock);
+    } else {
+      setHint('wrong');
+      // GSAP shake — much smoother than CSS keyframes
+      gsap.timeline({ onComplete: () => setHint('idle') })
+        .to(heartRef.current, { x: -10, rotation: -2.5, duration: .06, ease: 'none' })
+        .to(heartRef.current, { x:  9,  rotation:  2,   duration: .06, ease: 'none' })
+        .to(heartRef.current, { x: -7,  rotation: -1.5, duration: .06, ease: 'none' })
+        .to(heartRef.current, { x:  6,  rotation:  1,   duration: .06, ease: 'none' })
+        .to(heartRef.current, { x:  0,  rotation:  0,   duration: .08, ease: 'power2.out' });
+    }
+  };
+
+  return (
+    <div className="locked-stage">
+      <div className="locked-wrap" ref={wrapRef}>
+        <div className="hlm-mark" ref={markRef} style={{ transform: 'translateY(14px)' }}>حلم</div>
+        <div className="hlm-sub"  ref={subRef}  style={{ transform: 'translateY(14px)' }}>H · L · M &nbsp;·&nbsp; a dream</div>
+
+        <div className="heart-key-set" ref={keySetRef} style={{ transform: 'translateY(14px)' }}>
+          <svg ref={heartRef} className="heart-svg" viewBox="0 0 400 360" aria-hidden="true">
+            <defs>
+              <radialGradient id="heartGrad" cx="50%" cy="40%" r="65%">
+                <stop offset="0%"   stopColor="#e7a3b3"/>
+                <stop offset="55%"  stopColor="#c88597"/>
+                <stop offset="100%" stopColor="#6f2a3a"/>
+              </radialGradient>
+              <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="6" stroke="#6f2a3a" strokeWidth=".4" opacity=".4"/>
+              </pattern>
+            </defs>
+            <g className="heart-body">
+              <path d="M200 330 C 60 230, 20 140, 70 80 C 110 30, 170 40, 200 90 C 230 40, 290 30, 330 80 C 380 140, 340 230, 200 330 Z"
+                fill="#6f2a3a" opacity=".35" transform="translate(6,8)"/>
+              <g className="heart-left">
+                <path d="M200 330 C 60 230, 20 140, 70 80 C 110 30, 170 40, 200 90 L 200 330 Z"
+                  fill="url(#heartGrad)" stroke="#6f2a3a" strokeWidth="2"/>
+                <path d="M200 330 C 60 230, 20 140, 70 80 C 110 30, 170 40, 200 90 L 200 330 Z"
+                  fill="url(#hatch)"/>
+              </g>
+              <g className="heart-right">
+                <path d="M200 90 C 230 40, 290 30, 330 80 C 380 140, 340 230, 200 330 L 200 90 Z"
+                  fill="url(#heartGrad)" stroke="#6f2a3a" strokeWidth="2"/>
+                <path d="M200 90 C 230 40, 290 30, 330 80 C 380 140, 340 230, 200 330 L 200 90 Z"
+                  fill="url(#hatch)"/>
+              </g>
+              <g className="keyhole-g" style={{ transition: 'opacity .6s' }}>
+                <circle cx="200" cy="170" r="22" fill="#3a1820"/>
+                <rect x="190" y="180" width="20" height="50" rx="4" fill="#3a1820"/>
+                <circle cx="200" cy="170" r="22" fill="none" stroke="#b48a4a" strokeWidth="2" opacity=".7"/>
+              </g>
+              <text x="200" y="280" textAnchor="middle" fill="#3a1820" opacity=".55"
+                fontFamily="Amiri, serif" fontSize="28" fontStyle="italic">حلم</text>
+            </g>
+          </svg>
+
+          <form className="key-row" onSubmit={submit}>
+            <div className="key-bow"><span className="ar">س</span></div>
+            <div className="key-shaft"></div>
+            <div className="key-input-wrap">
+              <input ref={inputRef} className="key-input" value={val}
+                onChange={(e) => setVal(e.target.value)}
+                placeholder="·  ·  ·  ·  ·"
+                maxLength={12} spellCheck="false" autoComplete="off"
+                disabled={hint === 'opening'}/>
+            </div>
+          </form>
+        </div>
+
+        <div className="key-hint">
+          {hint === 'wrong'   ? <span className="wrong">— مو هي · try again, حلمي</span> :
+           hint === 'opening' ? <em>… عم تفتحي · opening …</em> :
+           <>
+             <div className="riddle">"Are you the key to my heart?"</div>
+             <div className="riddle-ar" dir="rtl">— همسي لي بإسمك · whisper your name</div>
+           </>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============ ENVELOPE ============ */
+function Envelope({ onOpen }) {
+  const [open, setOpen] = useState(false);
+  const stageRef = useRef(null);
+
+  useEffect(() => {
+    gsap.from(stageRef.current, { opacity: 0, scale: .96, duration: 1, ease: 'power3.out', delay: .2 });
+  }, []);
+
+  const handleClick = () => {
+    if (open) return;
+    setOpen(true);
+    gsap.delayedCall(1.6, onOpen);
+  };
+
+  return (
+    <div className="envelope-stage" ref={stageRef}>
+      <div>
+        <div className={`envelope ${open ? 'open' : ''}`} onClick={handleClick}>
+          <div className="env-face"></div>
+          <div className="seal">س</div>
+          <div className="env-flap"></div>
+        </div>
+        <div className="env-hint">{open ? '…' : 'tap to open the envelope'}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ============ THE LETTER ============ */
+function Letter() {
+  const ref = useRef(null);
+  useEffect(() => {
+    gsap.from(ref.current, { opacity: 0, y: 30, duration: 1.2, ease: 'power3.out', delay: .1 });
+  }, []);
+
+  return (
+    <div className="letter-stage">
+      <article className="letter arabic-letter" ref={ref} dir="rtl">
+        <div className="smallcaps en-mark">a letter · a dream · حلم</div>
+        <h2 className="ar-greeting">سلام…</h2>
+        <p className="salutation">— رسالة طويلة، وقلب أطول · a long letter, &amp; a longer heart.</p>
+
+        <p>
+          بكتبلك هالكلام وأنا متردد كتير كيف ابدأ، مو لأنو الكلام قليل،
+          بس لأنو المشاعر اللي جواتي أكبر بكتير من إنو توصفها مجرد حروف.
+          صارلي فترة عم فكر بكل شي عم بصير معنا، وحسيت إنو لازم كون
+          صريح معك لأبعد حدود، لأنك بتستاهلي كل الصدق اللي بالدنيا.
+        </p>
+
+        <p>
+          أنا فعلاً شايفك إنسانة مميزة، إنسانة ما بتتعوض وما في منها اتنين.
+          كل تفصيل فيكي بيعنيلي، وبكل صراحة، صرت بشوفك جزء أساسي من مستقبلي
+          ومن كل حلم عم بحلمه.. إنتِ مو مجرد "حدا" بحياتي، إنتِ
+          <em> الأمل </em>
+          اللي عم يعطيني طاقة لبكرة.
+        </p>
+
+        <p>
+          ومتل ما بتعرفي، ومثل ما حكينا قبل، أنا مبدئي واضح بخصوص العلاقات،
+          وما بحب أكون بعلاقة رسمية إلا لما تكون خطوة الخطبة هي الأساس.
+          بس بالوقت نفسه، بعرف إنو الظروف حالياً مو سهلة؛ إنتِ لساتك صغيرة
+          وقدامك طريق، وأنا كمان لساتني طالب وعم أسس حالي.
+        </p>
+
+        <p>
+          لكن بدي تعرفي إنو هاد "الوقت" وهي "الظروف" أبداً ما بيغيروا ذرة
+          من شعوري تجاهك. بالعكس، هاد الشي عم يخليني صمم أكتر إني أشتغل
+          على حالي، وأتعب، وأبذل كل جهدي لحتى أكون قد المسؤولية اللي بتستحقيها.
+          هدفي الوحيد إني أقدر بيوم من الأيام أمنلك الحياة اللي بتليق فيكي،
+          وتكوني مرتاحة وراضية ومبسوطة معي.
+        </p>
+
+        <p>
+          أنا مستعد أوقف جنبك، وكون سندك، وأحارب كرمالك وكرمال وصولنا لبعض
+          مهما كانت التحديات صعبة ومهما واجهنا ضغوطات.. إنتِ بتستاهلي المحاربة،
+          وبتستاهلي الصبر. يعني رح صير سوبرمان بس بنسخة طالب هندسة تعبان وناقصو نوم،
+          بس كرمالك كلو بيهون، إلا إذا كان عندي امتحان الصبح، هون بنأجل الحرب شوي!
+        </p>
+
+        <div className="ar-question">
+          <div className="ar-question-mark">؟</div>
+          <p>بس بالنهاية، هاد الطريق طويل وبدو قوة من الطرفين.. لهيك حبيت أسألك بكل حب ووضوح:</p>
+          <p className="ar-question-line">إنتِ مستعدة تكوني معي بهالطريق؟</p>
+          <p className="ar-question-sub">مستعدة نصبر سوا ونبني مستقبلنا خطوة بخطوة لحتى نوصل للي بنتمناه؟</p>
+        </div>
+
+        <p className="ar-sign-off">— حلمك،</p>
+      </article>
+    </div>
+  );
+}
+
+/* ============ VIGNETTE 1 — SALAM ACROSTIC ============ */
+function HeartsVignette() {
+  const hearts = useMemo(() => Array.from({ length: 14 }, (_, i) => ({
+    left: Math.random() * 100,
+    top:  Math.random() * 100,
+    size: 14 + Math.random() * 38,
+    delay: Math.random() * 8,
+    rot: Math.random() * 40 - 20
+  })), []);
+
+  const acrostic = [
+    { letter: 'س', trait: 'ساحرة', text: 'لأنو من أول ما عرفتك صرتِ حب الحياة، ما بعرف الطاقة اللي بحس فيها لما اسمع صوتك منين بتجي.. بس بحبها وبحب أثرها عليي.' },
+    { letter: 'ل', trait: 'لطيفة', text: 'لطفك وروحك وعطفك، وقدرتك إنك تحتويني وتشيلي تعبي بكلماتك الرقيقة.. هاد اللطف هو اللي بيغير يومي كلو.' },
+    { letter: 'أ', trait: 'أصيلة', text: 'وقفتك جنبي، وخوفك على زعلي، وتلبيتك لطلباتي ما بتدل غير على أصلك الطيب.. ومعدنك هاد هو اللي خلاني شوفك بمستقبلي ومعي بكل خطوة.' },
+    { letter: 'م', trait: 'مرحة',  text: 'روحك المرحة وضحكتك الحلوة خلتني شوف الدنيا من منظور تاني، كأنك بتلوني حياتي بالألوان.' }
+  ];
+
+  const sectionRef = useRef(null);
+  const rowRefs    = useRef([]);
+
+  useEffect(() => {
+    // Staggered acrostic row reveal
+    ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: 'top 72%',
+      onEnter: () => {
+        gsap.to(rowRefs.current, {
+          opacity: 1,
+          x: 0,
+          duration: .8,
+          stagger: .18,
+          ease: 'power3.out'
+        });
+      }
+    });
+  }, []);
+
+  return (
+    <section className="vignette v-hearts gs-reveal" ref={sectionRef}>
+      {hearts.map((h, i) => (
+        <svg key={i} className="floating-heart"
+          style={{ left: `${h.left}%`, top: `${h.top}%`, width: h.size, height: h.size,
+                   animationDelay: `${h.delay}s`, '--r': `${h.rot}deg` }}
+          viewBox="0 0 24 24">
+          <path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 7.5 4.5 9.5 5.3 11 7 12 8.5 13 7 14.5 5.3 16.5 4.5 20 3 23.5 7 21.5 11.5 19 16.5 12 21 12 21z" fill="currentColor"/>
+        </svg>
+      ))}
+      <div className="inner">
+        <div className="eyebrow">vignette no. 1 — an acrostic</div>
+        <div className="acrostic-title" dir="rtl">
+          <span className="acrostic-title-ar">سلام</span>
+          <span className="acrostic-title-en">— four letters, one whole sky.</span>
+        </div>
+        <p className="acrostic-lede" dir="rtl">
+          كل حرف من اسمك بيحكي عن صفة فيكي.. وهاد ما لقيته بكل حرف.
+          <span className="en"> — every letter of your name says one of the things you are to me.</span>
+        </p>
+
+        <div className="acrostic-list" dir="rtl">
+          {acrostic.map((a, i) => (
+            <div key={i} className="acrostic-row" ref={el => rowRefs.current[i] = el}>
+              <div className="acrostic-letter" aria-hidden="true">
+                <span className="acrostic-letter-glyph">{a.letter}</span>
+                <svg className="acrostic-letter-ring" viewBox="0 0 100 100" aria-hidden="true">
+                  <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor"
+                    strokeWidth=".8" strokeDasharray="2 4" opacity=".5"/>
+                </svg>
+              </div>
+              <div className="acrostic-body">
+                <div className="acrostic-trait">
+                  <span className="acrostic-trait-ar">({a.trait})</span>
+                </div>
+                <p className="acrostic-text">{a.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============ VIGNETTE 2 — GARDEN ============ */
+function GoatsVignette() {
+  const ref = useRef(null);
+
+  const petals = useMemo(() => Array.from({ length: 16 }, (_, i) => ({
+    left:  Math.random() * 100,
+    top:   Math.random() * 100,
+    size:  10 + Math.random() * 16,
+    dur:   10 + Math.random() * 10,
+    delay: Math.random() * 9,
+    rot:   Math.random() * 360,
+  })), []);
+
+  useEffect(() => {
+    ScrollTrigger.create({
+      trigger: ref.current,
+      start: 'top 75%',
+      onEnter: () => gsap.to(ref.current, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+    });
+  }, []);
+
+  return (
+    <section className="vignette v-garden gs-reveal" ref={ref}>
+
+      {/* floating petals */}
+      {petals.map((p, i) => (
+        <svg key={i} className="floating-petal"
+          style={{
+            left: `${p.left}%`, top: `${p.top}%`,
+            width: p.size, height: p.size,
+            '--pdur': `${p.dur}s`,
+            '--pdel': `${p.delay}s`,
+            '--pr': `${p.rot}deg`,
+          }}
+          viewBox="0 0 20 24" aria-hidden="true">
+          <ellipse cx="10" cy="12" rx="7" ry="11"
+            fill="var(--rose)" opacity=".85"
+            transform={`rotate(${p.rot % 40 - 20} 10 12)`}/>
+        </svg>
+      ))}
+
+      <div className="inner">
+        <div className="eyebrow">vignette no. 2 — حديقتنا · our garden</div>
+        <h3>The gentle ones.</h3>
+
+        <p className="garden-lede">
+          عندي نظرية إنك بتعرفي تديري مزرعة زغيرة على تلة، بكنزة كبيرة عليكي،
+          ومعزة وحدة بتتبعك لكل مطرح متل ما الياسمين بيتبع الشباك.
+          <span className="en"> I want to live inside that theory with you.</span>
+        </p>
+
+        {/* ornamental divider */}
+        <div className="garden-divider">
+          <div className="gd-line"></div>
+          <div className="gd-diamond sm"></div>
+          <div className="gd-diamond"></div>
+          <div className="gd-diamond sm"></div>
+          <div className="gd-line rev"></div>
+        </div>
+
+        <div className="garden-trio">
+          <FlowerPortrait
+            name="ياسمين" latin="Jasmine · يا س م ي ن"
+            trait="نقاء" traitEn="purity"
+            line="for the way you arrive without announcing yourself, and the whole room knows.">
+            <Jasmine/>
+          </FlowerPortrait>
+
+          <GoatPortrait/>
+
+          <FlowerPortrait
+            name="نرجس" latin="Narcissus · ن ر ج س"
+            trait="وفاء" traitEn="faithfulness"
+            line="for the way you remember everything — even the things I forgot to say.">
+            <Narcissus/>
+          </FlowerPortrait>
+        </div>
+
+        <div className="garden-outro">
+          — وساقية، وغلاية الشاي دايماً سخنة، وإنتي بتلتفتيلي من باب البيت.
+          <span className="en"> that's the whole picture.</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FlowerPortrait({ name, latin, trait, traitEn, line, children }) {
+  return (
+    <div className="flower-portrait">
+      <div className="fp-art">{children}</div>
+      <div className="fp-name" dir="rtl">{name}</div>
+      <div className="fp-latin">{latin}</div>
+      <div className="fp-trait-bar">
+        <span className="fp-trait-ar" dir="rtl">{trait}</span>
+        <span className="fp-trait-dot">◆</span>
+        <span className="fp-trait-en">{traitEn}</span>
+      </div>
+      <p className="fp-line">{line}</p>
+    </div>
+  );
+}
+
+function GoatPortrait() {
+  const petalSeeds = [
+    { l:'7%',  s:13, r:20  }, { l:'18%', s:9,  r:110 },
+    { l:'30%', s:15, r:200 }, { l:'44%', s:10, r:55  },
+    { l:'56%', s:14, r:280 }, { l:'68%', s:11, r:160 },
+    { l:'79%', s:16, r:320 }, { l:'89%', s:8,  r:80  },
+  ];
+
+  return (
+    <div className="goat-portrait">
+      <div className="goat-frame-wrap">
+
+        {/* top ornamental bar */}
+        <svg className="goat-frame-top" viewBox="0 0 280 28" aria-hidden="true">
+          <rect x="0" y="13" width="280" height="2" fill="var(--gold)" opacity=".9"/>
+          <rect x="0" y="11" width="280" height="6" fill="none" stroke="var(--gold)" strokeWidth=".5" opacity=".35"/>
+          {/* centre jewel */}
+          <rect x="126" y="7" width="28" height="14" fill="var(--paper)" stroke="var(--gold)" strokeWidth="1.2"/>
+          <polygon points="140,8 148,14 140,20 132,14" fill="var(--gold)" opacity=".7"/>
+          <circle cx="140" cy="14" r="3" fill="var(--rose-deep)" opacity=".85"/>
+          {/* side diamonds */}
+          {[60,220].map(x => (
+            <g key={x}>
+              <polygon points={`${x},10 ${x+5},14 ${x},18 ${x-5},14`} fill="var(--gold)" opacity=".55"/>
+            </g>
+          ))}
+          {/* vine tendrils */}
+          <path d="M0 14 Q40 6 80 14 Q100 18 120 14" fill="none" stroke="var(--rose)" strokeWidth=".8" opacity=".45"/>
+          <path d="M280 14 Q240 6 200 14 Q180 18 160 14" fill="none" stroke="var(--rose)" strokeWidth=".8" opacity=".45"/>
+          {[20,40,70].map(x => (
+            <circle key={x} cx={x} cy="14" r="1.5" fill="var(--rose)" opacity=".4"/>
+          ))}
+          {[260,240,210].map(x => (
+            <circle key={x} cx={x} cy="14" r="1.5" fill="var(--rose)" opacity=".4"/>
+          ))}
+        </svg>
+
+        {/* frame body */}
+        <div className="goat-frame-inner">
+          <CuteGoat/>
+          {/* rose petal floor */}
+          <div className="goat-petal-floor" aria-hidden="true"/>
+          {petalSeeds.map((p, i) => (
+            <svg key={i} className="goat-petal-scatter"
+              style={{ left: p.l, bottom: `${3 + (i % 4) * 4}%`, width: p.s, height: p.s }}
+              viewBox="0 0 20 24" aria-hidden="true">
+              <ellipse cx="10" cy="12" rx="7" ry="11"
+                fill="var(--lotus)" opacity=".8"
+                transform={`rotate(${p.r % 40 - 20} 10 12)`}/>
+            </svg>
+          ))}
+        </div>
+
+        {/* bottom ornamental bar */}
+        <svg className="goat-frame-bot" viewBox="0 0 280 28" aria-hidden="true">
+          <rect x="0" y="13" width="280" height="2" fill="var(--gold)" opacity=".9"/>
+          <rect x="126" y="7" width="28" height="14" fill="var(--paper)" stroke="var(--gold)" strokeWidth="1.2"/>
+          <polygon points="140,8 148,14 140,20 132,14" fill="var(--gold)" opacity=".7"/>
+          <circle cx="140" cy="14" r="3" fill="var(--rose-deep)" opacity=".85"/>
+          {[60,220].map(x => (
+            <polygon key={x} points={`${x},10 ${x+5},14 ${x},18 ${x-5},14`} fill="var(--gold)" opacity=".55"/>
+          ))}
+        </svg>
+
+      </div>
+      <div className="goat-label">معزتي الزغيرة</div>
+      <div className="goat-label-sub">— my little one, in her favorite sweater.</div>
+    </div>
+  );
+}
+
+function CuteGoat() {
+  return (
+    <svg viewBox="0 0 240 220" className="goat-svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="goatBody" cx="40%" cy="40%" r="70%">
+          <stop offset="0%"   stopColor="#fbf3df"/>
+          <stop offset="100%" stopColor="#e7d8ba"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="122" cy="205" rx="75" ry="7" fill="#3a2a1a" opacity=".25"/>
+      <rect x="82"  y="160" width="11" height="42" rx="4" fill="#3a2a1a"/>
+      <rect x="148" y="160" width="11" height="42" rx="4" fill="#3a2a1a"/>
+      <ellipse cx="118" cy="140" rx="68" ry="42" fill="url(#goatBody)" stroke="#3a2a1a" strokeWidth="2"/>
+      <ellipse cx="54"  cy="128" rx="9"  ry="6"  fill="#fbf3df" stroke="#3a2a1a" strokeWidth="2" transform="rotate(-20 54 128)"/>
+      <rect x="102" y="165" width="11" height="42" rx="4" fill="#3a2a1a"/>
+      <rect x="128" y="165" width="11" height="42" rx="4" fill="#3a2a1a"/>
+      <path d="M62 128 Q120 100 178 128 L172 168 Q120 178 66 168 Z" fill="#c88597" stroke="#6f2a3a" strokeWidth="2"/>
+      <path d="M62 138 Q120 132 178 138" stroke="#f4e7d3" strokeWidth="2" fill="none" opacity=".8"/>
+      <path d="M62 150 Q120 144 178 150" stroke="#f4e7d3" strokeWidth="2" fill="none" opacity=".7"/>
+      <path d="M62 162 Q120 156 178 162" stroke="#f4e7d3" strokeWidth="2" fill="none" opacity=".6"/>
+      <path d="M100 152 a4 4 0 0 1 8 0 a4 4 0 0 1 8 0 c0 5 -8 9 -8 9 c0 0 -8 -4 -8 -9 z" fill="#6f2a3a" opacity=".55"/>
+      <path d="M140 144 a3 3 0 0 1 6 0 a3 3 0 0 1 6 0 c0 4 -6 7 -6 7 c0 0 -6 -3 -6 -7 z" fill="#6f2a3a" opacity=".4"/>
+      <ellipse cx="180" cy="104" rx="38" ry="34" fill="url(#goatBody)" stroke="#3a2a1a" strokeWidth="2"/>
+      <ellipse cx="152" cy="82" rx="9" ry="19" fill="#fbf3df" stroke="#3a2a1a" strokeWidth="2" transform="rotate(-35 152 82)"/>
+      <ellipse cx="208" cy="82" rx="9" ry="19" fill="#fbf3df" stroke="#3a2a1a" strokeWidth="2" transform="rotate(35 208 82)"/>
+      <path d="M168 78 Q160 60 168 48" stroke="#8a6230" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+      <path d="M192 78 Q200 60 192 48" stroke="#8a6230" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+      <path d="M165 102 q5 5 10 0" stroke="#3a1820" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      <path d="M185 102 q5 5 10 0" stroke="#3a1820" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      <ellipse cx="160" cy="118" rx="6" ry="3.5" fill="#c88597" opacity=".7"/>
+      <ellipse cx="200" cy="118" rx="6" ry="3.5" fill="#c88597" opacity=".7"/>
+      <ellipse cx="180" cy="122" rx="10" ry="7" fill="#f1deb9"/>
+      <path d="M174 122 q6 5 12 0" stroke="#3a1820" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <g transform="translate(150 70) rotate(-10)">
+        <path d="M-8 0 L0 -5 L0 5 Z" fill="#a35468"/>
+        <path d="M8 0 L0 -5 L0 5 Z" fill="#a35468"/>
+        <circle cx="0" cy="0" r="2.5" fill="#6f2a3a"/>
+      </g>
+      <g transform="translate(216 70)">
+        {[0,72,144,216,288].map(a => (
+          <ellipse key={a} cx="0" cy="-4" rx="2" ry="4"
+            transform={`rotate(${a})`} fill="#fce6ea" stroke="#a35468" strokeWidth=".6"/>
+        ))}
+        <circle r="1.6" fill="#b48a4a"/>
+      </g>
+    </svg>
+  );
+}
+
+function Jasmine() {
+  return (
+    <svg viewBox="0 0 140 180" className="flower-svg" aria-hidden="true">
+      <path d="M70 180 C 70 140, 60 110, 70 80" stroke="#4b5328" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M70 145 C 50 138, 38 145, 36 158 C 50 158, 64 155, 70 145 Z" fill="#6f7a3f" stroke="#3f4520" strokeWidth="1"/>
+      <path d="M70 120 C 90 113, 102 122, 104 135 C 90 135, 76 130, 70 120 Z" fill="#6f7a3f" stroke="#3f4520" strokeWidth="1"/>
+      <ellipse cx="62" cy="95" rx="5" ry="8" fill="#fbf6e9" stroke="#a35468" strokeWidth="1" transform="rotate(-25 62 95)"/>
+      <g transform="translate(70 60)">
+        {[0,72,144,216,288].map(a => (
+          <ellipse key={a} cx="0" cy="-22" rx="11" ry="24"
+            transform={`rotate(${a})`} fill="#fbf6e9" stroke="#a35468" strokeWidth="1.2"/>
+        ))}
+        {[36,108,180,252,324].map(a => (
+          <ellipse key={a} cx="0" cy="-12" rx="5" ry="12"
+            transform={`rotate(${a})`} fill="#ffffff" stroke="#c88597" strokeWidth=".8" opacity=".9"/>
+        ))}
+        <circle r="6" fill="#e6c870" stroke="#a37a2a" strokeWidth="1"/>
+        <circle r="2" fill="#7a5a2a"/>
+      </g>
+      <g transform="translate(36 36) scale(.55)">
+        {[0,72,144,216,288].map(a => (
+          <ellipse key={a} cx="0" cy="-22" rx="11" ry="24"
+            transform={`rotate(${a})`} fill="#fbf6e9" stroke="#a35468" strokeWidth="1.4"/>
+        ))}
+        <circle r="5" fill="#e6c870"/>
+      </g>
+    </svg>
+  );
+}
+
+function Narcissus() {
+  return (
+    <svg viewBox="0 0 140 180" className="flower-svg" aria-hidden="true">
+      <path d="M70 180 C 68 140, 76 110, 70 80" stroke="#4b5328" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M70 178 C 50 150, 44 110, 56 80" stroke="#4b5328" strokeWidth="3" fill="none" strokeLinecap="round"/>
+      <path d="M70 178 C 90 150, 96 110, 84 80" stroke="#4b5328" strokeWidth="3" fill="none" strokeLinecap="round"/>
+      <g transform="translate(70 56)">
+        {[0,60,120,180,240,300].map(a => (
+          <ellipse key={a} cx="0" cy="-22" rx="12" ry="22"
+            transform={`rotate(${a})`} fill="#fbf6e9" stroke="#a35468" strokeWidth="1.2"/>
+        ))}
+        <ellipse cx="0" cy="0" rx="13" ry="10" fill="#f0b34a" stroke="#a37a2a" strokeWidth="1.2"/>
+        <ellipse cx="0" cy="-2" rx="11" ry="7" fill="#e69a2a" stroke="#a37a2a" strokeWidth=".8"/>
+        <ellipse cx="0" cy="-1" rx="6" ry="4" fill="#7a5a2a"/>
+      </g>
+      <ellipse cx="95" cy="96" rx="5" ry="8" fill="#f0b34a" stroke="#a37a2a" strokeWidth="1" transform="rotate(25 95 96)"/>
+    </svg>
+  );
+}
+
+/* ============ VIGNETTE 3 — WATER + LOTUS + FISH ============ */
+function WaterVignette() {
+  const fish = useMemo(() => {
+    const emojis = ['🐟','🐠','🐡','🐟','🐠'];
+    return Array.from({ length: 7 }, (_, i) => ({
+      top: 10 + Math.random() * 78,
+      delay: -Math.random() * 18,
+      dur: 16 + Math.random() * 14,
+      emoji: emojis[i % emojis.length],
+      size: 22 + Math.random() * 18,
+      flip: Math.random() > .5
+    }));
+  }, []);
+
+  const ripples = useMemo(() => Array.from({ length: 6 }, (_, i) => ({
+    left: 10 + Math.random() * 80,
+    top:  20 + Math.random() * 70,
+    size: 60 + Math.random() * 120,
+    delay: Math.random() * 7
+  })), []);
+
+  const sectionRef = useRef(null);
+  const cardRefs   = useRef([]);
+
+  useEffect(() => {
+    ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: 'top 72%',
+      onEnter: () => {
+        gsap.to(sectionRef.current, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' });
+        gsap.to(cardRefs.current, {
+          opacity: 1,
+          y: 0,
+          duration: .8,
+          stagger: .2,
+          ease: 'power3.out',
+          delay: .4
+        });
+      }
+    });
+  }, []);
+
+  return (
+    <section className="vignette v-water gs-reveal" ref={sectionRef}>
+      {ripples.map((r, i) => (
+        <div key={i} className="ripple"
+          style={{ left: `${r.left}%`, top: `${r.top}%`,
+                   width: r.size, height: r.size, animationDelay: `${r.delay}s` }}/>
+      ))}
+      <div className="fish-school">
+        {fish.map((f, i) => (
+          <span key={i} className="fish"
+            style={{ top: `${f.top}%`, animationDuration: `${f.dur}s`,
+                     animationDelay: `${f.delay}s`, fontSize: f.size,
+                     transform: f.flip ? 'scaleX(-1)' : 'none' }}>
+            {f.emoji}
+          </span>
+        ))}
+      </div>
+
+      <div className="inner">
+        <div className="eyebrow">vignette no. 3 — اللوتس · the lotus</div>
+        <div className="lotus-title" dir="rtl">
+          <span className="lotus-title-ar">اللوتس</span>
+          <span className="lotus-title-en">&nbsp;— a flower that rises through mud.</span>
+        </div>
+
+        <div className="lotus-question" dir="rtl">
+          بتعرفي شقد زهرة اللوتس بتذكرني فيكي؟
+        </div>
+
+        <p className="body lotus-body" dir="rtl">
+          اللوتس بتطلع من بين الطين اللي بالنهر، وبتواجه صعوبات كبيرة لحتى
+          تطلع على وش المي وتصير بهاد الجمال.. أنتِ متلها تماماً.
+          أنتِ الأمل اللي أجاني بالوقت اللي كنت فيه رافض الأمل، وأنتِ
+          الحلم اللي رح ضل متمسك فيه لأبعد حد.
+        </p>
+
+        <div className="lotus-row">
+          {[
+            '"بتطلع من الطين، وبتصير أحلى زهرة."',
+            '"أنتِ الأمل لما الدنيا كانت بلا أمل."',
+            '"حلمي اللي رح ضل متمسك فيه لأبعد حد."'
+          ].map((txt, i) => (
+            <div key={i} className="lotus-card" ref={el => cardRefs.current[i] = el}>
+              <Lotus/>
+              <p dir="rtl" lang="ar">{txt}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Lotus() {
+  return (
+    <svg className="lotus-svg" viewBox="0 0 64 64" aria-hidden="true">
+      <g transform="translate(32 38)">
+        {[-60,-30,0,30,60].map((a,i) => (
+          <ellipse key={i} cx="0" cy="-12" rx="7" ry="16"
+            transform={`rotate(${a})`} fill="#efb9c4" stroke="#a35468" strokeWidth="1"/>
+        ))}
+        {[-45,-15,15,45].map((a,i) => (
+          <ellipse key={i} cx="0" cy="-8" rx="5" ry="12"
+            transform={`rotate(${a})`} fill="#fce6ea" stroke="#a35468" strokeWidth="1"/>
+        ))}
+        <circle cx="0" cy="-6" r="3" fill="#b48a4a"/>
+      </g>
+    </svg>
+  );
+}
+
+/* ============ VOICE NOTE ============ */
+function VoiceNote() {
+  const [playing, setPlaying] = useState(false);
+  const [src, setSrc] = useState('voice.mp3');
+  const [time, setTime] = useState('00:00');
+  const [loadFailed, setLoadFailed] = useState(false);
+  const audioRef = useRef(null);
+  const fileRef  = useRef(null);
+  const ref      = useRef(null);
+
+  useEffect(() => {
+    ScrollTrigger.create({
+      trigger: ref.current,
+      start: 'top 80%',
+      onEnter: () => gsap.to(ref.current, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+    });
+  }, []);
+
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    const tick = () => {
+      const t = Math.floor(a.currentTime || 0);
+      setTime(`${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`);
+    };
+    const ended = () => setPlaying(false);
+    const err   = () => { setLoadFailed(true); setSrc(null); setPlaying(false); };
+    a.addEventListener('timeupdate', tick);
+    a.addEventListener('ended', ended);
+    a.addEventListener('error', err);
+    return () => {
+      a.removeEventListener('timeupdate', tick);
+      a.removeEventListener('ended', ended);
+      a.removeEventListener('error', err);
+    };
+  }, [src]);
+
+  const toggle = () => {
+    const a = audioRef.current;
+    if (!a || !src) return;
+    playing ? (a.pause(), setPlaying(false)) : (a.play(), setPlaying(true));
+  };
+
+  const onFile = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setSrc(URL.createObjectURL(f));
+    setLoadFailed(false);
+    setPlaying(false);
+  };
+
+  const bars = Array.from({ length: 36 });
+
+  return (
+    <div className="voice-stage">
+      <div className="voice-card gs-reveal" ref={ref}>
+        <div className="eyebrow smallcaps">a small recording</div>
+        <h4>press play — &amp; listen.</h4>
+        <div className="player">
+          <button className="play-btn" onClick={toggle} aria-label={playing ? 'pause' : 'play'}>
+            {playing
+              ? <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+              : <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M7 5 L20 12 L7 19 Z"/></svg>}
+          </button>
+          <div className={`waveform ${playing ? 'playing' : ''}`}>
+            {bars.map((_, i) => {
+              const h = 20 + Math.abs(Math.sin(i * .9)) * 75;
+              return <div key={i} className="bar"
+                style={{ height: `${h}%`, animationDelay: `${i * .05}s` }}/>;
+            })}
+          </div>
+          <div className="time">{time}</div>
+        </div>
+        <audio ref={audioRef} src={src || ''} preload="metadata"/>
+        <div className="upload-hint">
+          {src && !loadFailed
+            ? 'your recording is ready — press play.'
+            : <>no audio yet · <label onClick={() => fileRef.current?.click()}>upload a voice note</label> — for her ears only.</>}
+          <input ref={fileRef} type="file" accept="audio/*" onChange={onFile} style={{ display: 'none' }}/>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============ QUOTE + SIGNATURE ============ */
+function QuoteAndSignature() {
+  const quoteRef   = useRef(null);
+  const sigRef     = useRef(null);
+  const pathRef    = useRef(null);
+  const nameRef    = useRef(null);
+  const postRef    = useRef(null);
+  const loveRef    = useRef(null);
+
+  useEffect(() => {
+    // Scroll-triggered quote reveal
+    ScrollTrigger.create({
+      trigger: quoteRef.current,
+      start: 'top 78%',
+      onEnter: () => gsap.to(quoteRef.current, { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' })
+    });
+
+    // Signature draw + name cascade
+    ScrollTrigger.create({
+      trigger: sigRef.current,
+      start: 'top 82%',
+      onEnter: () => {
+        const tl = gsap.timeline();
+        tl.to(pathRef.current,  { strokeDashoffset: 0, duration: 3.2, ease: 'power2.inOut' })
+          .to(nameRef.current,  { opacity: 1, y: 0, duration: .9, ease: 'power3.out' }, '-=1.2')
+          .to(postRef.current,  { opacity: 1, y: 0, duration: .7, ease: 'power3.out' }, '-=.5')
+          .to(loveRef.current,  { opacity: 1, y: 0, duration: .7, ease: 'power3.out' }, '-=.4');
+      }
+    });
+  }, []);
+
+  return (
+    <>
+      <div className="quote-stage gs-reveal" ref={quoteRef}>
+        <blockquote>
+          "لاقتلن عن التي احبها الا ان اراها في حضاني تنعم"
+          <cite>— إلك، يا حلمي · for you, my حلم.</cite>
+        </blockquote>
+      </div>
+
+      <div className="sig-stage" ref={sigRef}>
+        <div className="yours">yours, entirely.</div>
+        <svg className="signature-svg" viewBox="0 0 420 110" aria-hidden="true">
+          <path ref={pathRef}
+            d="M 18 70
+               C 28 30, 50 22, 60 60
+               C 65 90, 80 80, 88 55
+               C 92 45, 100 45, 102 60
+               L 102 90
+               M 118 50
+               C 130 30, 150 30, 152 55
+               C 153 70, 142 78, 130 72
+               M 168 40
+               C 178 30, 196 30, 198 55
+               L 198 80
+               M 198 55
+               C 208 38, 226 38, 230 55
+               L 230 80
+               M 250 70
+               C 250 50, 270 40, 280 55
+               C 286 65, 282 78, 270 78
+               C 260 78, 256 70, 258 60
+               M 296 30
+               L 296 80
+               M 296 56
+               L 322 35
+               M 296 56
+               L 326 82
+               M 344 50
+               C 354 38, 374 38, 376 55
+               L 376 80
+               C 388 60, 402 56, 408 70"/>
+        </svg>
+        <div className="printed-name" ref={nameRef} style={{ transform: 'translateY(10px)' }}>Mohamed Lutfi</div>
+        <div className="post"     ref={postRef}  style={{ transform: 'translateY(10px)' }}>محمد لطفي · حلمك</div>
+        <div className="with-love" ref={loveRef} style={{ transform: 'translateY(10px)' }}>— from my heart, to yours · من قلبي إلى قلبك</div>
+      </div>
+    </>
+  );
+}
+
+/* ============ GENERIC REVEAL WATCHER ============ */
+function useRevealAll() {
+  useEffect(() => {
+    const els = document.querySelectorAll('.gs-reveal');
+    els.forEach(el => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 78%',
+        onEnter: () => gsap.to(el, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' })
+      });
+    });
+  }, []);
+}
+
+/* ============ MAIN APP ============ */
+function App() {
+  const [stage, setStage] = useState('locked'); // locked | envelope | letter
+
+  useRevealAll();
+
+  return (
+    <>
+      {stage === 'locked' &&
+        <HeartLock onUnlock={() => setStage('envelope')}/>}
+      {stage === 'envelope' &&
+        <Envelope onOpen={() => setStage('letter')}/>}
+      {stage === 'letter' && <>
+        <Letter/>
+        <HeartsVignette/>
+        <GoatsVignette/>
+        <WaterVignette/>
+        <VoiceNote/>
+        <QuoteAndSignature/>
+      </>}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
 </body>
 </html>
